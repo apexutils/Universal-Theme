@@ -6,7 +6,7 @@ Demo: https://www.apexutils.com
 
 ### About
 
-Take control over the Universal Theme! This plug-in includes many dynamic actions to leverage the Universal Theme and it's JavaScript components.
+Take control over the Universal Theme! This plug-in includes many dynamic actions to leverage the Universal Theme and its JavaScript components.
 
 ### Actions
 
