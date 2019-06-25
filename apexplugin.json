@@ -1,0 +1,29 @@
+{
+  "name" : "APEX Utils - Universal Theme",
+  "version" : "1.0",
+  "description" : "Take control over the Universal Theme! This plug-in includes many dynamic actions to leverage the Universal Theme and its many components like the navigation menu, collapsible/maximizable regions, and more.",
+  "keywords" : ["universal theme", "navigation menu", "expand", "collapse", "scroll"],
+  "homepage" : "https://www.github.com/apexutils/Universal-Theme",
+  "license" : "MIT",
+  "author" : {
+    "name" : "Stefan Dobre",
+    "email" : "svdobre@gmail.com",
+    "twitter": "stefan__dobre"
+  },
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/apexutils/Universal-Theme"
+  },
+  "oracle" : {
+    "versions" : ["11.2.0.1", "12.1.0.1", "12.2.0.1", "18.1.0", "19.1.0"],
+    "apex" : {
+      "versions" : ["18.2.0", "19.1.0"],
+      "plugin" : {
+        "internalName" : "COM.APEXUTILS.UNIVERSALTHEME",
+        "type" : "dynamic action",
+        "demo" : "https://www.apexutils.com/ords/f?p=APEXUTILS:UNIVERSALTHEME",
+        "previewImage" : "https://repository-images.githubusercontent.com/192466919/d993c600-96b8-11e9-9162-c8ffa5491571"
+      }
+    }
+  }
+}
