@@ -1,22 +1,38 @@
 window.apexUtils = window.apexUtils || {};
 window.apexUtils.universalTheme = {
 	collapseNavMenu: function(){
-		apex.theme42.toggleWidgets.collapseWidget('nav');
+		/* the toggleWidgets object is not exposed in 19.1 anymore
+		 * apex.theme42.toggleWidgets.collapseWidget('nav');
+		 * maybe they bring it back at some point.
+		 * Using a workaround instead
+		 */
+	    if($('#t_Button_navControl').hasClass('is-active')){
+		    $('#t_Button_navControl').click().blur();
+	    }
 	},
 	expandNavMenu: function(){
-		apex.theme42.toggleWidgets.expandWidget('nav');
+		/* the toggleWidgets object is not exposed in 19.1 anymore
+		 * apex.theme42.toggleWidgets.expandWidget('nav');
+		 * maybe they bring it back at some point.
+		 * Using a workaround instead
+		 */
+	    if(!$('#t_Button_navControl').hasClass('is-active')){
+		    $('#t_Button_navControl').click().blur();
+	    }
+	},
+	setNavMenuNodesAutoCollapse: function(on){
+		$('#t_TreeNav').treeView("option", "autoCollapse", on);
 	},
 	collapseNavMenuNodes: function(){
-		$(apex.theme42.TREE_NAV).treeView('collapseAll');
+		$('#t_TreeNav').treeView('collapseAll');
 	},
 	expandNavMenuNodes: function(){
-		$(apex.theme42.TREE_NAV).treeView('expandAll');
+		$('#t_TreeNav').treeView('expandAll');
 	},
 	collapseCollapsibleRegion: function(selector){
 		var $region = $(selector);
 		// See widget.ToggleCore.js and widget.collapsible.js
 		// This unfortunately remains the best option
-		// todo. check that this is actually a collapsible region
 		//if ($region.hasClass('is-expanded')) {
 		//	$region.find('button.t-Button--hideShow').first().click().blur();
 		//}
@@ -36,11 +52,37 @@ window.apexUtils.universalTheme = {
 		$region.collapsible('instance').core.expand();
 		$region.collapsible('instance').core.setUserPreference(true);
 	},
+	maximizeMaximizableRegion: function(selector){
+		var $btn = $('.js-maximizeButtonContainer > button', selector).first();
+		if($btn.attr('aria-expanded') == 'false'){
+			$btn.click().blur();
+		}
+	},
+	restoreMaximizableRegion: function(selector){
+		var $btn = $('.js-maximizeButtonContainer > button', selector).first();
+		if($btn.attr('aria-expanded') == 'true'){
+			$btn.click().blur();
+		}
+	},
 	configureSuccessNotificationDuration: function(duration){
-		apex.theme42.configureSuccessMessages({
-			autoDismiss: true,
-			duration: duration
-		});
+		//>=19.1
+		if(apex.theme42.util.configAPEXMsgs){
+			apex.theme42.util.configAPEXMsgs({
+		    	autoDismiss: true,
+		    	duration: parseInt(duration)
+		  	});
+		//<19.1
+		} else {
+			apex.message.setThemeHooks({
+			  beforeShow: function(pMsgType, pElement$){
+			    if (pMsgType=='success'){ 
+			   setTimeout(function() {
+			        $('.t-Alert').fadeOut('slow');
+			      }, parseInt(duration));
+			    }   
+			  }
+			});
+		}
 	},
 	scrollTo: function(selector, duration){
 		//apex.theme42.util.scrollTo(id);
@@ -62,12 +104,9 @@ window.apexUtils.universalTheme = {
         }
 	},
 	exec: function(){
-		var daThis = this;
+		var daThis 		  = this;
 		var performAction = daThis.action.attribute01;
-		var duration = daThis.action.attribute02;
-
-		var spinnerHTML = daThis.action.attribute03;
-		var spinnerCSS = daThis.action.attribute04;
+		var duration 	  = daThis.action.attribute02;
 
 		switch(performAction){
 			case 'collapsenavmenu':
@@ -82,6 +121,9 @@ window.apexUtils.universalTheme = {
 			case 'expandnavmenunodes':
 				apexUtils.universalTheme.expandNavMenuNodes();
 				break;
+			case 'setnavmenunodesautocollapse':
+				apexUtils.universalTheme.setNavMenuNodesAutoCollapse(daThis.action.attribute03 == 'Y');
+				break;
 			case 'collapsecollapsibleregion':
 				if(daThis.action.affectedElementsType != 'REGION'){
 					apex.debug.error('A region needs to be selected for ' + daThis.action.action);
@@ -94,6 +136,20 @@ window.apexUtils.universalTheme = {
 					apex.debug.error('A region needs to be selected for ' + daThis.action.action);
 				} else {
 					apexUtils.universalTheme.expandCollapsibleRegion(daThis.affectedElements);
+				}
+				break;
+			case 'maximizableregionmaximize':
+				if(daThis.action.affectedElementsType != 'REGION'){
+					apex.debug.error('A region needs to be selected for ' + daThis.action.action);
+				} else {
+					apexUtils.universalTheme.maximizeMaximizableRegion(daThis.affectedElements);
+				}
+				break;
+			case 'maximizableregionrestore':
+				if(daThis.action.affectedElementsType != 'REGION'){
+					apex.debug.error('A region needs to be selected for ' + daThis.action.action);
+				} else {
+					apexUtils.universalTheme.restoreMaximizableRegion(daThis.affectedElements);
 				}
 				break;
 			case 'scrollto':
@@ -114,3 +170,19 @@ window.apexUtils.universalTheme = {
 		}
 	}
 };
+
+apex.jQuery(window).on('apexwindowresized', function() {
+    $('body').trigger('au-ut-apexwindowresized');
+});
+
+apex.jQuery(window).on('theme42ready', function() {
+    $('body').trigger('au-ut-theme42ready');
+});
+
+apex.jQuery('#t_TreeNav').on('theme42layoutchanged', function(event, obj) {
+    if(obj.action == 'expand'){
+    	$('body').trigger('au-ut-theme42navmenuexpanded');
+    } else if (obj.action == 'collapse'){
+    	$('body').trigger('au-ut-theme42navmenucollapsed');
+    }
+});
