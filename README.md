@@ -19,6 +19,9 @@ Take control over the Universal Theme! This plug-in includes many dynamic action
 * Maximize & restore maximizable regions
 * More declarative APEX UT events
 
+### Change Log
+
+**v1.0.1** fixed success message duration issue
 **v1.0** initial release
 
 ### License
