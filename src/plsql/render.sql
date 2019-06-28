@@ -9,7 +9,8 @@
  *------------------------------------------------------------------------------
  * Modification History
  *
- * 24.06.2019   v1.0 initial release
+ * 27.06.2019   v1.0.1   fixed success notif duration issue
+ * 24.06.2019   v1.0     initial release
  */-----------------------------------------------------------------------------
 function render
     ( p_dynamic_action in apex_plugin.t_dynamic_action
@@ -46,7 +47,7 @@ begin
                         then p_dynamic_action.attribute_02 
                         else p_dynamic_action.attribute_03 
                       end;
-    elsif l_perform_action = 'configuresuccessnotifduration' then
+    elsif l_perform_action = 'configuresuccessnotificationduration' then
         l_duration := l_success_duration;
     end if;
 

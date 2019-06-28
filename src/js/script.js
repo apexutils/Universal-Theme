@@ -74,13 +74,13 @@ window.apexUtils.universalTheme = {
 		//<19.1
 		} else {
 			apex.message.setThemeHooks({
-			  beforeShow: function(pMsgType, pElement$){
-			    if (pMsgType=='success'){ 
-			   setTimeout(function() {
-			        $('.t-Alert').fadeOut('slow');
-			      }, parseInt(duration));
-			    }   
-			  }
+				beforeShow: function(pMsgType, pElement$){
+					if (pMsgType=='success'){ 
+						setTimeout(function(){
+							$('.t-Alert').fadeOut('slow');
+						}, parseInt(duration));
+					}
+				}
 			});
 		}
 	},
@@ -172,17 +172,17 @@ window.apexUtils.universalTheme = {
 };
 
 apex.jQuery(window).on('apexwindowresized', function() {
-    $('body').trigger('au-ut-apexwindowresized');
+	$('body').trigger('au-ut-apexwindowresized');
 });
 
 apex.jQuery(window).on('theme42ready', function() {
-    $('body').trigger('au-ut-theme42ready');
+	$('body').trigger('au-ut-theme42ready');
 });
 
 apex.jQuery('#t_TreeNav').on('theme42layoutchanged', function(event, obj) {
-    if(obj.action == 'expand'){
-    	$('body').trigger('au-ut-theme42navmenuexpanded');
-    } else if (obj.action == 'collapse'){
-    	$('body').trigger('au-ut-theme42navmenucollapsed');
-    }
+	if(obj.action == 'expand'){
+		$('body').trigger('au-ut-theme42navmenuexpanded');
+	} else if (obj.action == 'collapse'){
+		$('body').trigger('au-ut-theme42navmenucollapsed');
+	}
 });
